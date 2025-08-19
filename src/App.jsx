@@ -16,7 +16,6 @@ export default function App() {
   const [editingTask, setEditingTask] = useState(null);
   const [activeTab, setActiveTab] = useState("form");
   const [searchTerm, setSearchTerm] = useState("");
-  
 
   //  useEffect(() => {
   //   getTasks().then(setTasks);
@@ -118,15 +117,16 @@ export default function App() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="flex-grow border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#d7195c]"
+                  style={{ height: "38px" }}
                 />
                 <div className="w-32">
-                  {/* Your existing statusFilter dropdown wrapped in flex justify-end */}
                   <div className="flex justify-end">
                     <select
                       id="statusFilter"
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value)}
-                      className="border border-gray-300 rounded px-2 py-1 text-sm w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d7195c] focus:border-[#d7195c]"
+                      className="border border-gray-300 rounded px-3 py-2 text-sm w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d7195c] focus:border-[#d7195c]"
+                      style={{ height: "38px" }}
                     >
                       <option>All</option>
                       <option>Pending</option>
