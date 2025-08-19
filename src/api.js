@@ -1,14 +1,15 @@
-const API_BASE = "http://localhost:3000"; // Change to your backend URL/port
+const API_BASE = "http://localhost:3000";
 
-export async function getTasks(status = "All", search = "") {
+export async function getTasks(status = "All", search = "", sortBy = "") {
   let url = `${API_BASE}/tasks?`;
-  if (status && status !== "All")
-    url += `status=${encodeURIComponent(status)}&`;
+  if (status && status !== "All") url += `status=${encodeURIComponent(status)}&`;
   if (search) url += `search=${encodeURIComponent(search)}&`;
+  if (sortBy) url += `sortBy=${encodeURIComponent(sortBy)}&`;
   const res = await fetch(url);
   const data = await res.json();
-  return data.map((task) => ({ ...task, id: task._id || task.id }));
+  return data.map(task => ({ ...task, id: task._id || task.id }));
 }
+
 
 export async function addTask(task) {
   const { id, ...rest } = task;
