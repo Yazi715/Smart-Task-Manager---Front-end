@@ -1,6 +1,7 @@
 // TaskItem.jsx
 import React from "react";
 
+
 export default function TaskItem({ task, onEdit, onDelete }) {
   return (
     <div className="flex justify-between items-start bg-gray-50 border-l-4 border-blue-600 rounded-md p-4 mb-4 hover:shadow-md transition">

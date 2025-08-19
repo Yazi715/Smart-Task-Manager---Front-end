@@ -15,14 +15,19 @@ export default function App() {
   const [statusFilter, setStatusFilter] = useState("All");
   const [editingTask, setEditingTask] = useState(null);
   const [activeTab, setActiveTab] = useState("form");
+  const [searchTerm, setSearchTerm] = useState("");
+  
 
   //  useEffect(() => {
   //   getTasks().then(setTasks);
   // }, []);
 
   useEffect(() => {
-    getTasks(statusFilter).then(setTasks);
-  }, [statusFilter]);
+    getTasks(statusFilter, searchTerm).then((data) => {
+      setTasks(data);
+    });
+  }, [statusFilter, searchTerm]);
+
   function handleSaveTask(task) {
     if (task.id) {
       updateTask(task).then((updated) => {
@@ -106,18 +111,30 @@ export default function App() {
             <>
               {/* <h3 className="text-3xl font-bold text-[#d7195c] text-center mb-8">Task List</h3> */}
 
-              <div className="w-full flex justify-end mb-3">
-                <select
-                  id="statusFilter"
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className="border border-gray-300 rounded px-2 py-1 text-sm w-28 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d7195c] focus:border-[#d7195c]"
-                >
-                  <option>All</option>
-                  <option>Pending</option>
-                  <option>In Progress</option>
-                  <option>Completed</option>
-                </select>
+              <div className="mb-6 flex items-center justify-between space-x-4">
+                <input
+                  type="text"
+                  placeholder="Search tasks..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="flex-grow border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#d7195c]"
+                />
+                <div className="w-32">
+                  {/* Your existing statusFilter dropdown wrapped in flex justify-end */}
+                  <div className="flex justify-end">
+                    <select
+                      id="statusFilter"
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      className="border border-gray-300 rounded px-2 py-1 text-sm w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d7195c] focus:border-[#d7195c]"
+                    >
+                      <option>All</option>
+                      <option>Pending</option>
+                      <option>In Progress</option>
+                      <option>Completed</option>
+                    </select>
+                  </div>
+                </div>
               </div>
 
               <TaskList

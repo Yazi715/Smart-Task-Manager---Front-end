@@ -1,17 +1,16 @@
 const API_BASE = "http://localhost:3000"; // Change to your backend URL/port
 
-// api.js
-export async function getTasks(status = "All") {
-  let url = `${API_BASE}/tasks`;
-  if (status && status !== "All") url += `?status=${encodeURIComponent(status)}`;
+export async function getTasks(status = "All", search = "") {
+  let url = `${API_BASE}/tasks?`;
+  if (status && status !== "All")
+    url += `status=${encodeURIComponent(status)}&`;
+  if (search) url += `search=${encodeURIComponent(search)}&`;
   const res = await fetch(url);
   const data = await res.json();
-  return data.map(task => ({ ...task, id: task._id || task.id }));
+  return data.map((task) => ({ ...task, id: task._id || task.id }));
 }
 
-
 export async function addTask(task) {
-  // Don't send id for new tasks!
   const { id, ...rest } = task;
   const res = await fetch(`${API_BASE}/tasks`, {
     method: "POST",
@@ -21,7 +20,6 @@ export async function addTask(task) {
   const data = await res.json();
   return { ...data, id: data._id };
 }
-
 
 export async function updateTask(task) {
   const res = await fetch(`${API_BASE}/tasks/${task.id}`, {
