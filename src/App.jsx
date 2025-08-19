@@ -18,28 +18,24 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("");
 
-
   //  useEffect(() => {
   //   getTasks().then(setTasks);
   // }, []);
 
-useEffect(() => {
-  getTasks(statusFilter, searchTerm, sortBy).then(data => {
-    setTasks(data);
-  });
-}, [statusFilter, searchTerm, sortBy]);
-
+  useEffect(() => {
+    getTasks(statusFilter, searchTerm, sortBy).then((data) => {
+      setTasks(data);
+    });
+  }, [statusFilter, searchTerm, sortBy]);
 
   function handleSaveTask(task) {
     if (task.id) {
       updateTask(task).then((updated) => {
-        // Replace task in state with updated from backend
         setTasks(tasks.map((t) => (t.id === updated.id ? updated : t)));
         setEditingTask(null);
       });
     } else {
       addTask(task).then((newTask) => {
-        // Always trust backend's object and append
         setTasks([...tasks, newTask]);
       });
     }
@@ -111,45 +107,43 @@ useEffect(() => {
           )}
           {activeTab === "list" && (
             <>
-              {/* <h3 className="text-3xl font-bold text-[#d7195c] text-center mb-8">Task List</h3> */}
 
-<div className="mb-6 flex items-center justify-between space-x-4">
-  <input
-    type="text"
-    placeholder="Search tasks..."
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-    className="flex-grow border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#d7195c]"
-    style={{ height: "38px" }}
-  />
-  <select
-    value={sortBy}
-    onChange={(e) => setSortBy(e.target.value)}
-    className="border border-gray-300 rounded px-3 py-2 text-sm w-36 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d7195c] focus:border-[#d7195c]"
-    style={{ height: "38px" }}
-  >
-    <option value="">Sort By</option>
-    <option value="createdAt">Created Date</option>
-    <option value="status">Status</option>
-  </select>
-  <div className="w-32">
-    <div className="flex justify-end">
-      <select
-        id="statusFilter"
-        value={statusFilter}
-        onChange={(e) => setStatusFilter(e.target.value)}
-        className="border border-gray-300 rounded px-3 py-2 text-sm w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d7195c] focus:border-[#d7195c]"
-        style={{ height: "38px" }}
-      >
-        <option>All</option>
-        <option>Pending</option>
-        <option>In Progress</option>
-        <option>Completed</option>
-      </select>
-    </div>
-  </div>
-</div>
-
+              <div className="mb-6 flex items-center justify-between space-x-4">
+                <input
+                  type="text"
+                  placeholder="Search tasks..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="flex-grow border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#d7195c]"
+                  style={{ height: "38px" }}
+                />
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="border border-gray-300 rounded px-3 py-2 text-sm w-36 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d7195c] focus:border-[#d7195c]"
+                  style={{ height: "38px" }}
+                >
+                  <option value="">Sort By</option>
+                  <option value="createdAt">Created Date</option>
+                  <option value="status">Status</option>
+                </select>
+                <div className="w-32">
+                  <div className="flex justify-end">
+                    <select
+                      id="statusFilter"
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      className="border border-gray-300 rounded px-3 py-2 text-sm w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d7195c] focus:border-[#d7195c]"
+                      style={{ height: "38px" }}
+                    >
+                      <option>All</option>
+                      <option>Pending</option>
+                      <option>In Progress</option>
+                      <option>Completed</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
 
               <TaskList
                 tasks={tasks}

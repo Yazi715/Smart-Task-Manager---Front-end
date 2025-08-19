@@ -10,7 +10,6 @@ export async function getTasks(status = "All", search = "", sortBy = "") {
   return data.map(task => ({ ...task, id: task._id || task.id }));
 }
 
-
 export async function addTask(task) {
   const { id, ...rest } = task;
   const res = await fetch(`${API_BASE}/tasks`, {
