@@ -1,10 +1,19 @@
-// TaskItem.jsx
 import React from "react";
 
-
 export default function TaskItem({ task, onEdit, onDelete }) {
+  // Map task statuses to Tailwind color classes for border-left
+  const statusBorderColors = {
+    Pending: "border-yellow-400",
+    "In Progress": "border-blue-600",
+    Completed: "border-green-600",
+  };
+
+  const borderColorClass = statusBorderColors[task.status] || "border-gray-400";
+
   return (
-    <div className="flex justify-between items-start bg-gray-50 border-l-4 border-blue-600 rounded-md p-4 mb-4 hover:shadow-md transition">
+    <div
+      className={`flex justify-between items-start bg-gray-50 border-l-4 rounded-md p-4 mb-4 hover:shadow-md transition ${borderColorClass}`}
+    >
       <div>
         <div className="text-lg font-semibold mb-1">
           {task.title} <span className="text-gray-600 font-normal">({task.status})</span>
