@@ -3,6 +3,7 @@ import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import "./App.css";
 import bgWhite from "./assets/imgs/bg_white.png";
+import { getTasks, addTask, updateTask, deleteTask } from "./api";
 
 function getInitialTasks() {
   const local = localStorage.getItem("tasks");
@@ -11,37 +12,44 @@ function getInitialTasks() {
 
 export default function App() {
   const [tasks, setTasks] = useState(getInitialTasks());
+  const [statusFilter, setStatusFilter] = useState("All");
   const [editingTask, setEditingTask] = useState(null);
   const [activeTab, setActiveTab] = useState("form");
+  const statusOptions = ["All", "Pending", "In Progress", "Completed"];
+
+   useEffect(() => {
+    getTasks().then(setTasks);
+  }, []);
 
   useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
-
-  function handleSaveTask(task) {
-    if (task.id) {
-      setTasks(tasks.map((t) => (t.id === task.id ? { ...t, ...task } : t)));
+  getTasks(statusFilter).then(setTasks);
+}, [statusFilter]);
+function handleSaveTask(task) {
+  if (task.id) {
+    updateTask(task).then(updated => {
+      // Replace task in state with updated from backend
+      setTasks(tasks.map(t => (t.id === updated.id ? updated : t)));
       setEditingTask(null);
-    } else {
-      setTasks([
-        ...tasks,
-        {
-          id: Date.now(),
-          ...task,
-          createdAt: new Date().toISOString(),
-        },
-      ]);
-    }
+    });
+  } else {
+    addTask(task).then(newTask => {
+      // Always trust backend's object and append
+      setTasks([...tasks, newTask]);
+    });
   }
+}
 
-  function handleEditTask(task) {
-    setEditingTask(task);
-    setActiveTab("form");
-  }
+
+function handleEditTask(task) {
+  setEditingTask(task);
+  setActiveTab("form");
+}
 
   function handleDeleteTask(id) {
-    setTasks(tasks.filter((t) => t.id !== id));
-    if (editingTask && editingTask.id === id) setEditingTask(null);
+    deleteTask(id).then(() => {
+      setTasks(tasks.filter(t => t.id !== id));
+      if (editingTask && editingTask.id === id) setEditingTask(null);
+    });
   }
 
   return (
@@ -100,6 +108,8 @@ export default function App() {
                 tasks={tasks}
                 onEdit={handleEditTask}
                 onDelete={handleDeleteTask}
+                statusFilter={statusFilter}
+              setStatusFilter={setStatusFilter}
               />
             </>
           )}
