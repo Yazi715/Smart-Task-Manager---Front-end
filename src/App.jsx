@@ -18,10 +18,6 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("");
 
-  //  useEffect(() => {
-  //   getTasks().then(setTasks);
-  // }, []);
-
   useEffect(() => {
     getTasks(statusFilter, searchTerm, sortBy).then((data) => {
       setTasks(data);

@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function TaskItem({ task, onEdit, onDelete }) {
-  // Map task statuses to Tailwind color classes for border-left
+
   const statusBorderColors = {
     Pending: "border-yellow-400",
     "In Progress": "border-blue-600",
