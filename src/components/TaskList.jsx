@@ -10,9 +10,14 @@ export default function TaskList({ tasks, onEdit, onDelete }) {
     );
 
   return (
-    <div className="bg-white rounded-3xl p-10 max-w-3xl w-full shadow-xl">
-      {tasks.map(task => (
-        <TaskItem key={task.id} task={task} onEdit={onEdit} onDelete={onDelete} />
+    <div className="bg-white rounded-3xl p-10 max-w-3xl w-full shadow-xl min-h-[450px]">
+      {tasks.map((task) => (
+        <TaskItem
+          key={task.id}
+          task={task}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
       ))}
     </div>
   );

@@ -17,22 +17,30 @@ export default function App() {
   const [activeTab, setActiveTab] = useState("form");
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("");
+  const [page, setPage] = useState(1);
+  const limit = 3;
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    getTasks(statusFilter, searchTerm, sortBy).then((data) => {
-      setTasks(data);
+    getTasks(statusFilter, searchTerm, sortBy, page, limit).then((data) => {
+      setTasks(data.tasks); 
+      setTotal(data.total); 
     });
-  }, [statusFilter, searchTerm, sortBy]);
+  }, [statusFilter, searchTerm, sortBy, page]);
 
   function handleSaveTask(task) {
-    if (task.id) {
-      updateTask(task).then((updated) => {
-        setTasks(tasks.map((t) => (t.id === updated.id ? updated : t)));
+    if (task.id || task._id) {
+      updateTask(task).then(() => {
+        getTasks(statusFilter, searchTerm, sortBy, page, limit).then((data) => {
+          setTasks(data.tasks);
+          setTotal(data.total);
+        });
         setEditingTask(null);
       });
     } else {
-      addTask(task).then((newTask) => {
-        setTasks([...tasks, newTask]);
+      const { _id, id, ...taskData } = task;
+      addTask(taskData).then((newTask) => {
+        setTasks([...tasks, { ...newTask, id: newTask._id || newTask.id }]);
       });
     }
   }
@@ -57,7 +65,7 @@ export default function App() {
         className="absolute top-0 left-0 w-full h-full object-cover z-10 pointer-events-none"
         style={{ opacity: 0.18 }}
       />
-      <h2 className="text-4xl font-extrabold tracking-tight text-white mb-14 mt-8 select-none drop-shadow-lg">
+      <h2 className="text-4xl font-extrabold tracking-tight text-white mb-2 mt-2 select-none drop-shadow-lg">
         Smart Task Manager
       </h2>
       <div className="flex items-stretch justify-center w-full max-w-4xl shadow-2xl rounded-2xl overflow-visible bg-[#d7195c] z-20">
@@ -91,7 +99,7 @@ export default function App() {
           </button>
         </div>
         {/* Main Content Card */}
-        <div className=" flex-1 px-12 py-10 flex flex-col justify-center z-20">
+        <div className=" flex-1 px-12 py-6 flex flex-col justify-center z-20">
           {activeTab === "form" && (
             <>
               <TaskForm
@@ -103,7 +111,6 @@ export default function App() {
           )}
           {activeTab === "list" && (
             <>
-
               <div className="mb-6 flex items-center justify-between space-x-4">
                 <input
                   type="text"
@@ -148,6 +155,25 @@ export default function App() {
                 statusFilter={statusFilter}
                 setStatusFilter={setStatusFilter}
               />
+              <div className="flex justify-center items-center mt-4 gap-2">
+                <button
+                  className="px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  disabled={page === 1}
+                  onClick={() => setPage(page - 1)}
+                >
+                  Prev
+                </button>
+                <span className="px-3 text-sm font-medium text-white">
+                  {page} / {Math.ceil(total / limit)}
+                </span>
+                <button
+                  className="px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  disabled={page === Math.ceil(total / limit)}
+                  onClick={() => setPage(page + 1)}
+                >
+                  Next
+                </button>
+              </div>
             </>
           )}
         </div>
