@@ -47,6 +47,7 @@ git clone https://github.com/Yazi715/Smart-Task-Manager---Backend.git
     PORT=3000
 
 4. Start the backend server:
+    ```
         npm start
     ```
     _or_  
@@ -63,6 +64,7 @@ git clone https://github.com/Yazi715/Smart-Task-Manager---Backend.git
     npm install
 
 3. Start the frontend app:
+    ```
     npm start
     ```
     _or_  
