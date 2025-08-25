@@ -59,7 +59,7 @@ useEffect(() => {
   localStorage.removeItem("token");
   localStorage.removeItem("expiry");
   setUsername(null);
-}, 10 * 60 * 1000); // 15 min inactivity
+}, 10 * 60 * 1000); 
 
   function handleEditTask(task) {
     setEditingTask(task);
