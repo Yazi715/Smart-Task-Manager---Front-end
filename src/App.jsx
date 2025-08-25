@@ -4,6 +4,9 @@ import TaskList from "./components/TaskList";
 import "./App.css";
 import bgWhite from "./assets/imgs/bg_white.png";
 import { getTasks, addTask, updateTask, deleteTask } from "./api";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import useAutoLogout from "./components/AutoLogout";
 
 function getInitialTasks() {
   const local = localStorage.getItem("tasks");
@@ -11,6 +14,11 @@ function getInitialTasks() {
 }
 
 export default function App() {
+  const [username, setUsername] = useState(
+    localStorage.getItem("token") ? "user" : null
+  );
+  const [showSignup, setShowSignup] = useState(false);
+
   const [tasks, setTasks] = useState(getInitialTasks());
   const [statusFilter, setStatusFilter] = useState("All");
   const [editingTask, setEditingTask] = useState(null);
@@ -21,12 +29,14 @@ export default function App() {
   const limit = 3;
   const [total, setTotal] = useState(0);
 
-  useEffect(() => {
-    getTasks(statusFilter, searchTerm, sortBy, page, limit).then((data) => {
-      setTasks(data.tasks); 
-      setTotal(data.total); 
-    });
-  }, [statusFilter, searchTerm, sortBy, page]);
+useEffect(() => {
+  if (!username) return; 
+  getTasks(statusFilter, searchTerm, sortBy, page, limit).then((data) => {
+    setTasks(data.tasks); 
+    setTotal(data.total); 
+  });
+}, [username, statusFilter, searchTerm, sortBy, page]);
+
 
   function handleSaveTask(task) {
     if (task.id || task._id) {
@@ -45,6 +55,12 @@ export default function App() {
     }
   }
 
+  useAutoLogout(() => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("expiry");
+  setUsername(null);
+}, 10 * 60 * 1000); // 15 min inactivity
+
   function handleEditTask(task) {
     setEditingTask(task);
     setActiveTab("form");
@@ -57,6 +73,17 @@ export default function App() {
     });
   }
 
+  if (!username) {
+    return showSignup ? (
+      <Signup onSwitchToLogin={() => setShowSignup(false)} />
+    ) : (
+      <Login
+        onLogin={setUsername}
+        onSwitchToSignup={() => setShowSignup(true)}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#d7195c] flex flex-col items-center">
       <img
@@ -65,6 +92,16 @@ export default function App() {
         className="absolute top-0 left-0 w-full h-full object-cover z-10 pointer-events-none"
         style={{ opacity: 0.18 }}
       />
+      <button
+        className="absolute top-6 right-6 bg-white text-[#d7195c] rounded-lg px-4 py-2 font-semibold shadow hover:bg-[#d7195c] hover:text-white transition"
+        onClick={() => {
+          localStorage.removeItem("token");
+          window.location.reload(); 
+        }}
+      >
+        Sign Out
+      </button>
+
       <h2 className="text-4xl font-extrabold tracking-tight text-white mb-2 mt-2 select-none drop-shadow-lg">
         Smart Task Manager
       </h2>
