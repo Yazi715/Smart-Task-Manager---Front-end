@@ -42,9 +42,11 @@ git clone https://github.com/Yazi715/Smart-Task-Manager---Backend.git
     npm install
 
 3. Create a `.env` file with the following content (update with your own values):
+    ```
     MONGODB_URI=mongodb://localhost:27017/smart-task-manager
     JWT_SECRET=<your_secure_jwt_secret>
     PORT=3000
+    ```
 
 4. Start the backend server:
     ```
